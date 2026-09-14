@@ -1,0 +1,708 @@
+@import "tailwindcss";
+
+/* ── Sistema visual da clínica ──────────────────────────────────────────
+   DOURADO #CE9A44 — a rampa dourada do atelier LODÊ, adotada por decisão da
+   Sarynne a 2026-08-10 por preferir aquele tom, mais quente e menos amarelo.
+
+   Nota para quem vier a seguir: o tom anterior (#DBBD49) era a média dos
+   65 553 píxeis opacos e quentes das letras do logótipo oficial da clínica
+   (`logocima.png.png`), medida a 2026-08-08 — ou seja, batia certo com o
+   logótipo. Este vem do logótipo de OUTRA marca. Se em algum momento o
+   dourado parecer "ao lado" do logótipo na mesma página, é isto, e a
+   reversão é trocar os dois valores abaixo de volta para #dbbd49/#f0dd8b.
+
+   VERDE #0D322F — o verde do Benessere, adotado nesta versão portuguesa a
+   2026-09-08 no lugar do vinho #3B0112, que a versão inglesa mantém. É o tom
+   que ela escolheu para o Benessere a 2026-08-08, mais escuro do que o
+   #114340 medido no logótipo.
+
+   TODA a paleta escura foi RECALCULADA, não traduzida a olho: cada tom saiu
+   do seu equivalente vinho em Oklab, com a mesma luminância mais o
+   deslocamento que põe o #0D322F exatamente onde estava o #3B0112 (+0,0635
+   de L), e com o croma a 47,2% do original — que é todo o croma que um verde
+   deste tom (−172,4°) aguenta dentro do sRGB.
+
+   Contrastes verificados (WCAG 2.1) sobre #0D322F:
+     #CE9A44 →   5,50:1  AA   (era 6,35 sobre o vinho — o verde é mais claro)
+     #FBD87A →  10,04:1  AAA  — usar este quando o dourado for texto pequeno
+     #FFFFFF →  13,87:1  AAA
+     #0D322F sobre #FFFFFF → 13,87:1  AAA
+     #CE9A44 sobre #FFFFFF →  2,52:1  FALHA — o dourado nunca é texto
+                                       sobre claro, só sobre o verde.
+     Sobre zona clara do vídeo continua a falhar sem a faixa do cabeçalho.
+     Daí a faixa. */
+@theme {
+  --font-display: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Marca — o verde do Benessere, o dourado adotado do atelier LODÊ. */
+  --color-verde: #0d322f;
+  --color-ouro: #ce9a44;
+
+  /* Derivadas por luminância a partir das duas acima. */
+  --color-verde-fundo: #092623;
+  --color-verde-elevado: #123c39;
+  --color-verde-linha: #1d4643;
+  --color-ouro-claro: #fbd87a;
+
+  /* Restantes degraus da rampa do atelier. Só uma cor nunca parece metal:
+     é preciso escuro → meio → especular dentro da mesma superfície. */
+  --color-ouro-fundo: #583701;
+  --color-ouro-sombra: #836330;
+  --color-ouro-brilho: #fff5c1;
+
+  /* Base CLARA. A inversão para fundo verde foi experimentada a
+     2026-08-25 e revertida a pedido dela — o site volta a ser branco com o
+     verde nas secções escuras.
+
+     Os nomes das famílias ficaram da experiência e são os certos: `fundo`
+     são superfícies, `texto` é tinta. Nas secções escuras, o texto claro usa
+     `text-fundo` — texto na cor da superfície clara. É a inversão normal.
+
+     Os dois degraus abaixo NÃO são branco puro de propósito. O `fundo-2` é o
+     disco que desenha o arco da cúpula e o fundo dos cartões: igual ao
+     fundo, o arco deixava de existir. */
+  --color-fundo: #ffffff;
+  --color-fundo-2: #f4f2ee;
+  --color-fundo-3: #e6e2da;
+
+  /* Texto sobre branco: o verde da marca, 13,87:1. */
+  --color-texto: #0d322f;
+  --color-texto-suave: #50615f;
+  --color-texto-fraca: #818e8c;
+
+  --text-display: clamp(2.6rem, 8.5vw, 9rem);
+  --text-title: clamp(1.9rem, 5vw, 4.5rem);
+  --text-sub: clamp(1.35rem, 2.6vw, 2.25rem);
+  --text-lead: clamp(1.05rem, 1.3vw, 1.3rem);
+  --text-label: 0.6875rem;
+
+  /* Altura da faixa do cabeçalho: logótipo + espaçamento vertical. Vive
+     aqui para a faixa e o recuo do vídeo não poderem divergir. Este é o
+     valor de telemóvel; o de computador está no @layer base abaixo. */
+  --altura-cabecalho: 83px;
+
+  --spacing-section: clamp(6rem, 13vw, 13.5rem);
+  --spacing-gutter: clamp(1.25rem, 4.2vw, 4.5rem);
+
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-quart: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  /* Em computador o logótipo é maior, logo a faixa também. */
+  @media (min-width: 768px) {
+    :root {
+      --altura-cabecalho: 104px;
+    }
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: auto; /* o Lenis trata disto */
+
+    /* A tela por trás da página — o que se vê para lá do conteúdo.
+
+       O `body` é branco, e no telemóvel dela sobrava uma FAIXA BRANCA depois
+       do rodapé. Duas coisas a podem causar e nenhuma se reproduz em
+       computador: o ressalto do iOS ao chegar ao fim, e a altura do documento
+       ficar maior do que o conteúdo quando a barra do Safari se recolhe e o
+       `vh` das secções fixadas muda debaixo dos pés do ScrollTrigger.
+
+       Pintar a TELA resolve as duas de uma vez, porque nas duas o que se vê é
+       a tela e não uma caixa. Vai no `html` e não no `body` de propósito: o
+       `body` continua branco, que é o fundo das secções claras — mudá-lo
+       escurecia meia página. O `html` só pinta o que fica FORA da caixa do
+       `body`.
+
+       Verde e não branco porque as duas pontas da página já são verde: a
+       primeira secção e o rodapé. Assim, o que sobra lê-se como a página a
+       continuar, não como um buraco. */
+    background-color: var(--color-verde);
+  }
+
+  body {
+    background-color: var(--color-fundo);
+    color: var(--color-texto);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-verde);
+    color: var(--color-fundo);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ouro);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Durante a entrada não há scroll: a porta abre sem que o site fuja
+     por baixo. A classe é removida no fim da timeline. */
+  html.is-loading,
+  html.is-loading body {
+    overflow: hidden;
+    height: 100%;
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+}
+
+@utility label {
+  font-size: var(--text-label);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+@utility gutter {
+  padding-inline: var(--spacing-gutter);
+}
+
+/* Texto em ouro metálico.
+   Uma cor sólida nunca parece metal: lê-se como ouro porque percorre bronze
+   escuro → meio-tom → brilho dentro da mesma letra.
+
+   Paragens adotadas da rampa do atelier LODÊ (2026-08-10), para acompanhar a
+   troca do dourado base. A rampa anterior era medida no logótipo de origem
+   (p05 #3D2804 · p20 #A37210 · p50 #E3C13B · p80 #FEF74E) — está guardada no
+   histórico do git se for preciso voltar atrás.
+
+   O ângulo continua a 105deg: é do desenho deste site, não do atelier. */
+@utility ouro-metal {
+  background-image: linear-gradient(
+    105deg,
+    #583701 0%,
+    #836330 16%,
+    #ce9a44 36%,
+    #fff5c1 50%,
+    #fbd87a 64%,
+    #836330 84%,
+    #583701 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* A mesma rampa, mas RECOMEÇADA EM CADA LINHA.
+
+   `ouro-metal` aplica o gradiente à caixa do elemento: num título de duas ou
+   três linhas, a linha mais curta apanha só a ponta escura da rampa (#583701)
+   e lê-se castanha. Com `box-decoration-break: clone` cada fragmento de linha
+   passa a ter a sua própria caixa de pintura — e portanto a rampa completa,
+   do escuro ao especular. Exige `display: inline`: em bloco não há fragmentos
+   para clonar. */
+@utility ouro-metal-linhas {
+  display: inline;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  background-image: linear-gradient(
+    105deg,
+    #583701 0%,
+    #836330 16%,
+    #ce9a44 36%,
+    #fff5c1 50%,
+    #fbd87a 64%,
+    #836330 84%,
+    #583701 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Verde METÁLICO, para os títulos e as fitas das secções claras.
+
+   Mesma construção do ouro — rampa escuro → médio → reflexo → médio →
+   escuro — mas na família do vinho, porque sobre branco o dourado dá
+   2,52:1 e não se lê.
+
+   Escurecida a pedido dela (2026-08-25): o reflexo era #B9707F e lia-se
+   rosado. Agora o ponto mais claro é #366561, que dá 6,58:1 sobre branco.
+   O metal continua a ler-se porque o que o faz não é o brilho ser CLARO, é
+   haver salto de luminosidade dentro da mesma letra — aqui de L*3 no
+   escuro a L*26 no reflexo.
+
+   Duas versões: `-linhas` para títulos que quebram (cada linha recomeça a
+   rampa, via `box-decoration-break: clone`), e a simples para elementos em
+   bloco — como a fita cinética, que não pode passar a `display: inline`
+   sem perder o recorte da faixa. */
+@utility verde-metal {
+  background-image: linear-gradient(
+    105deg,
+    #061715 0%,
+    #082321 16%,
+    #1a3936 36%,
+    #366561 50%,
+    #1d4541 64%,
+    #082321 84%,
+    #061715 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+@utility verde-metal-linhas {
+  display: inline;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  background-image: linear-gradient(
+    105deg,
+    #061715 0%,
+    #082321 16%,
+    #1a3936 36%,
+    #366561 50%,
+    #1d4541 64%,
+    #082321 84%,
+    #061715 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* O MESMO verde metálico de cima, com uma lâmina de luz a percorrê-lo.
+   Vive à parte de `verde-metal-linhas` porque só o título do espaço a leva:
+   um site com todos os títulos a cintilar deixa de ter um título em
+   destaque.
+
+   Aqui não serve o `::after` do `ouro-vivo`. Com o texto recortado no
+   gradiente (`background-clip: text`) as letras são um buraco: uma camada
+   por cima tapava-as. A lâmina é uma SEGUNDA camada de fundo — transparente
+   toda ela menos a faixa — e é a POSIÇÃO dessa camada que anda; a rampa
+   base fica quieta por baixo.
+
+   Conta feita para a faixa entrar e sair fora das letras: a camada tem 300%
+   da largura e a faixa está a meio dela, logo o centro da faixa fica em
+   `largura x (1,5 - 0,02 P)`. De P=100% a P=0% o centro vai de -0,5 a +1,5
+   larguras — atravessa a linha inteira e começa e acaba fora dela.
+
+   O especular pára em #447a74 e não sobe mais: sobre branco dá 4,90:1, o
+   mínimo AA. Acima disto o pico da luz deixava de ser texto legível.
+
+   Os 54% de silêncio no fim do ciclo são a mesma regra do botão dourado —
+   sem pausa, um título deste tamanho a cintilar sem parar lê-se como GIF.
+
+   Corre em telemóvel, tablet e computador: é CSS, não depende do GSAP nem
+   do scroll. É o pedido dela — o tamanho muda só em computador, a animação
+   é em todos. */
+@utility verde-metal-vivo {
+  display: inline;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+
+  background-image:
+    linear-gradient(
+      100deg,
+      transparent 42%,
+      color-mix(in oklab, #447a74 55%, transparent) 47%,
+      #447a74 50%,
+      color-mix(in oklab, #447a74 55%, transparent) 53%,
+      transparent 58%
+    ),
+    linear-gradient(
+      105deg,
+      #061715 0%,
+      #082321 16%,
+      #1a3936 36%,
+      #366561 50%,
+      #1d4541 64%,
+      #082321 84%,
+      #061715 100%
+    );
+  background-size:
+    300% 100%,
+    100% 100%;
+  background-position:
+    100% 0,
+    0 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+
+  animation: verde-lamina 5.6s cubic-bezier(0.45, 0, 0.4, 1) infinite;
+}
+
+@keyframes verde-lamina {
+  0% {
+    background-position:
+      100% 0,
+      0 0;
+  }
+  46%,
+  100% {
+    background-position:
+      0% 0,
+      0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .verde-metal-vivo {
+    animation: none;
+  }
+}
+
+/* Botão em chapa dourada com reflexo a passar — portado do atelier LODÊ
+   (2026-08-10). Duas camadas e uma lâmina de luz:
+
+   1. Luz vertical de cima, que dá a curvatura da barra torneada.
+   2. Chapa horizontal no dourado MÉDIO, não no claro: com a chapa clara
+      (luminância ~217) o especular ~240 fica só 23 níveis acima e o
+      reflexo não se vê; no médio (~160) é um salto de 80 e lê-se como luz.
+   3. `::after` com a lâmina especular, desfocada 2px — bordos duros
+      leem-se como uma barra a deslizar, desfocados leem-se como luz.
+
+   A pausa de 38% no fim do ciclo é o que impede que isto pareça um banner
+   a piscar. */
+@utility ouro-vivo {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: var(--color-verde);
+
+  background-image:
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--color-ouro-brilho) 34%, transparent) 0%,
+      transparent 52%,
+      transparent 72%,
+      color-mix(in oklab, var(--color-ouro-fundo) 15%, transparent) 100%
+    ),
+    linear-gradient(
+      100deg,
+      var(--color-ouro-sombra) 0%,
+      var(--color-ouro) 10%,
+      var(--color-ouro) 90%,
+      var(--color-ouro-sombra) 100%
+    );
+
+  &::after {
+    content: "";
+    position: absolute;
+    /* Sem folga horizontal: com a camada mais larga que o botão o reflexo
+       passa a maior parte do percurso fora da chapa. */
+    inset: -30% 0;
+    z-index: 1;
+    pointer-events: none;
+    background-image: linear-gradient(
+      100deg,
+      transparent 36%,
+      color-mix(in oklab, var(--color-ouro-brilho) 50%, transparent) 45%,
+      var(--color-ouro-brilho) 50%,
+      color-mix(in oklab, var(--color-ouro-brilho) 50%, transparent) 55%,
+      transparent 64%
+    );
+    filter: blur(2px);
+    transform: translateX(-100%);
+    animation: ouro-brilho 4s cubic-bezier(0.45, 0, 0.4, 1) infinite;
+    will-change: transform;
+  }
+
+  & > * {
+    position: relative;
+    z-index: 2;
+  }
+}
+
+/* Fio a contornar as molduras.
+   `pathLength="1"` no rect faz o perímetro valer 1, por isso o traço e o
+   vazio são frações e não píxeis — a mesma regra serve molduras de qualquer
+   tamanho. A curva é a mesma `--ease-expo` do resto do site: arranca depressa
+   e assenta devagar, que é o que faz o gesto ler-se como desenho e não como
+   varrimento. */
+.fio-moldura rect {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0.55;
+}
+
+.fio-moldura[data-visivel="true"] rect {
+  animation: fio-desenhar 1.5s var(--ease-expo) forwards;
+}
+
+@keyframes fio-desenhar {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+/* O cartão inteiro responde ao rato: o fio ganha corpo e a fotografia
+   aproxima-se de leve. Nada de sombras — o site não as usa. */
+@media (hover: hover) {
+  .cartao-moldura:hover .fio-moldura rect {
+    opacity: 1;
+    stroke-width: 1.4;
+    transition: opacity 0.4s var(--ease-expo), stroke-width 0.4s var(--ease-expo);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fio-moldura[data-visivel="true"] rect { animation: none; stroke-dashoffset: 0; }
+}
+
+/* Esbatimento de entrada das fotografias. As molduras pintam sempre o
+   gradiente da marca por baixo; isto evita que a fotografia salte de repente
+   por cima dele quando acaba de descarregar. Com movimento reduzido não
+   corre — quem pediu menos animação não leva nem esta. */
+@keyframes surgir {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [class*="animate-[surgir"] { animation: none !important; }
+}
+
+@keyframes ouro-brilho {
+  0% {
+    transform: translateX(-100%);
+  }
+  62%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ouro-vivo::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* Grão fino. A `overlay` com opacidade alta lia-se como nódoas sobre
+   superfícies escuras; `soft-light` a 0.10 é textura, não sujidade. */
+@utility grain {
+  position: relative;
+  isolation: isolate;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.1;
+    mix-blend-mode: soft-light;
+    background-size: 220px 220px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+@layer utilities {
+  [data-reveal-line] > * {
+    will-change: transform;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Corrida horizontal em telemóvel: painel largo, proporções de computador ─
+
+   O problema que isto resolve: a introdução tem o texto à esquerda e a figura
+   da figura à direita, e isso vive de o ecrã ser mais largo do que alto. Num
+   telemóvel (390×844) não é. Medido: a figura, que em computador ocupa 47% da
+   largura, passava a 95% e engolia a coluna de texto. Não havia arranjo que
+   coubesse — o formato do ecrã não dá.
+
+   Em vez de encolher a composição até caber, alarga-se o PAINEL: 160svh de
+   largura, que é o rácio 1440/900 do computador. O painel deixa de caber no
+   ecrã e percorre-se de lado — que é o que a corrida horizontal já faz. As
+   proporções passam a ser as mesmas; muda só quanto se vê de cada vez.
+
+   O motor não precisa de saber: `distancia` sai de `track.scrollWidth −
+   innerWidth` e há um `ResizeObserver` na faixa, por isso o percurso e a
+   altura da secção ajustam-se sozinhos.
+
+   ## Porque os tokens vão em `svh`
+
+   São todos `vw` — medem a JANELA. Dentro de um painel mais largo do que a
+   janela, media-se a coisa errada: o título ficava nos 30px de telemóvel num
+   painel de 1350px. Aqui redefinem-se em `svh`, que segue a altura do painel,
+   e cada valor é o de computador dividido por 900 (a altura de referência):
+   título 72px → 8svh, sub 36 → 4svh, lead 18,72 → 2,08svh, gutter 60,48 →
+   6,72svh, secção 187,2 → 20,8svh, display 122,4 → 13,6svh.
+
+   Os `max-w` em `ch` não precisam de nada: são relativos à letra e escalam
+   com ela.
+
+   ## Porque há regras a repetir o que o `md:` faria
+
+   Uma media query lê a largura do ECRÃ, não a do painel. Com o painel a
+   1350px num ecrã de 390, as variantes `md:` continuam desligadas. Duas
+   fazem falta e estão repostas abaixo pelas âncoras `data-`: as duas colunas
+   do corpo do Statement e o recuo de 9% do conteúdo da cúpula. O arco da
+   cúpula leva o mesmo tratamento: `135vw` mediria a janela, e 1,35 × 160svh
+   dá os 216svh que são a mesma fração do painel.
+
+   ## Não se aplica com movimento reduzido
+
+   Aí a faixa vira coluna e os painéis voltam a 100% da largura (regra no
+   próprio componente). Redefinir os tokens nesse caso dava um título de 67px
+   numa coluna estreita. */
+@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+  /* SÓ o painel da introdução. A cúpula fica à largura do ecrã, como sempre
+     esteve: o conteúdo dela é esparso — flores num canto, título em arco,
+     duas legendas — e espalhado por um painel largo dava um ecrã inteiro de
+     branco entre as flores e o título. Medido: só se vêem 430 de 1491px de
+     cada vez. */
+  .painel-largo {
+    width: max(100vw, 140lvh);
+  }
+
+  /* Os tokens vão no #introducao e não na raiz da corrida pela mesma razão:
+     aplicados à cúpula, davam-lhe um título em arco desenhado para um painel
+     que ela já não tem.
+
+     Estão em `lvh` porque o painel também está (ver horizontal-experience).
+     Cada valor é o de computador a dividir por 900, a altura de referência:
+     título 72px → 8lvh, sub 36 → 4lvh, lead 18,72 → 2,08lvh, gutter 60,48 →
+     6,72lvh, secção 187,2 → 20,8lvh, display 122,4 → 13,6lvh. Os `max-w` em
+     `ch` não precisam de nada: são relativos à letra e escalam com ela. */
+  #introducao {
+    --text-display: 13.6lvh;
+    --text-title: 8lvh;
+    --text-sub: 4lvh;
+    --text-lead: 2.08lvh;
+    --spacing-section: 20.8lvh;
+    --spacing-gutter: 6.72lvh;
+  }
+
+  /* Uma media query lê a largura do ECRÃ, não a do painel: com o painel a
+     1300px num ecrã de 430, o `md:grid-cols-2` do corpo continua desligado.
+     Reposto aqui. */
+  #introducao [data-corpo] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4rem;
+  }
+}
+
+/* ── Filosofia: distribuição vertical e largura do parágrafo ────────────────
+
+   Medido a 1440x900 antes desta regra, os vãos eram 94 / 32 / 56 / 48 / 90 e
+   sobravam 153px depois do fecho — o conteúdo encostado ao topo e a folga
+   toda em baixo. A base da secção estava em 187px contra 94 no topo, ou seja
+   ao dobro.
+
+   Vai aqui e não em classes porque o título e o corpo são desenhados pelo
+   `Statement`, que serve outras três secções — mexer nas classes dele mudava
+   as quatro. Prende-se ao `#filosofia` e não sai daqui.
+
+   Só a partir de `md`: em telemóvel os vãos já são proporcionalmente maiores
+   (a letra é menor e as margens em `rem` não encolhem com ela), e 88px entre
+   título e corpo num ecrã estreito abria um buraco. */
+@media (min-width: 768px) {
+  #filosofia h2 {
+    margin-bottom: 5.5rem;
+  }
+
+  #filosofia [data-corpo] {
+    margin-bottom: 6rem;
+  }
+}
+
+/* Parágrafo mais estreito, a pedido dela: 52ch davam 614px e encostavam-no à
+   fotografia, com 46px de folga. A 42ch a linha continua confortável de ler
+   (o intervalo saudável é 45-75 caracteres e isto fica dentro) e abre a
+   coluna do lado. Sem `md:` porque em telemóvel o ecrã é mais estreito do
+   que 42ch e a regra não chega a morder. */
+#filosofia [data-corpo] p {
+  max-width: 42ch;
+}
+
+/* ── Fio contínuo ──────────────────────────────────────────────────────────
+
+   Um segmento curto a dar a volta ao contorno, sem fim. Anda POR CIMA do
+   traço de entrada, que continua a desenhar-se uma vez e a ficar — daí serem
+   dois `rect`.
+
+   `stroke-dasharray: 0.16 0.84` com `pathLength="1"`: o traço ocupa 16% do
+   perímetro e o vazio os outros 84%, seja qual for o tamanho da moldura. O
+   `dashoffset` a correr de 0 a -1 leva-o uma volta completa.
+
+   `linear` e não uma curva: é um movimento constante, e qualquer aceleração
+   dava-lhe um sítio onde abranda, que se leria como falha.
+
+   Quem pediu movimento reduzido não leva nenhum: fica só o contorno. */
+@keyframes fio-passar {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -1; }
+}
+
+.fio-moldura[data-visivel="true"] rect.fio-passante {
+  stroke-dasharray: 0.16 0.84;
+  stroke-dashoffset: 0;
+  opacity: 0.9;
+  animation: fio-passar 7s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fio-moldura rect.fio-passante {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* A figura da introdução, na banda dos tablets.
+   MEDIDO a 2026-09-08 a 1024 px: o `h-[109.4svh]` dava 1494 px de altura e,
+   num ficheiro 1024×1536, 1024 px de largura — o painel inteiro. O texto
+   ficava POR CIMA da fotografia e não se lia.
+   A 48vw sobram 532 px para a coluna, que está limitada a 34ch (~480 px).
+   Está aqui e não em Tailwind porque `min-[768px]:max-[1199px]:` não chegou
+   a gerar regra — verificado a medir: a figura continuava nos 1024. */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .figura-intro {
+    height: auto;
+    width: 48vw;
+  }
+}

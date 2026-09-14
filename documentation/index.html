@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ondelle — Premium Aesthetics Clinic Template</title>
+<style>
+  :root { --tinta:#241016; --suave:#6b5560; --linha:#e6dde0; --fundo:#fffdfc; --caixa:#f7f2f3; --realce:#3b0112; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:3rem 1.5rem 6rem; font:16px/1.65 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+         color:var(--tinta); background:var(--fundo); }
+  main { max-width:52rem; margin:0 auto; }
+  h1 { font-size:2.1rem; line-height:1.2; margin:0 0 .5rem; letter-spacing:-.02em; }
+  h2 { font-size:1.4rem; margin:3rem 0 .75rem; padding-bottom:.4rem; border-bottom:2px solid var(--linha); }
+  h3 { font-size:1.1rem; margin:2rem 0 .5rem; }
+  h4 { font-size:1rem; margin:1.5rem 0 .4rem; color:var(--suave); }
+  p, li { color:var(--tinta); }
+  a { color:var(--realce); }
+  code { background:var(--caixa); padding:.15em .4em; border-radius:4px; font-size:.9em;
+         font-family:ui-monospace,SFMono-Regular,Consolas,monospace; }
+  pre { background:var(--caixa); border:1px solid var(--linha); border-radius:8px; padding:1rem;
+        overflow-x:auto; }
+  pre code { background:none; padding:0; font-size:.86rem; line-height:1.5; }
+  table { border-collapse:collapse; width:100%; margin:1.25rem 0; display:block; overflow-x:auto; }
+  th, td { border:1px solid var(--linha); padding:.55rem .8rem; text-align:left; vertical-align:top; font-size:.94rem; }
+  th { background:var(--caixa); font-weight:600; }
+  blockquote { margin:1.25rem 0; padding:.75rem 1rem; border-left:3px solid var(--realce);
+               background:var(--caixa); border-radius:0 6px 6px 0; }
+  blockquote p { margin:0; }
+  hr { border:0; border-top:1px solid var(--linha); margin:2.5rem 0; }
+  ul, ol { padding-left:1.4rem; }
+  li { margin:.3rem 0; }
+  @media (prefers-color-scheme: dark) {
+    :root { --tinta:#f0e8ea; --suave:#b09aa2; --linha:#3a2b31; --fundo:#170a0e; --caixa:#221317; --realce:#e0b878; }
+  }
+</style>
+</head>
+<body>
+<main>
+<h1>Ondelle — Premium Aesthetics Clinic Template</h1>
+<p>A production-ready Next.js 15 template for medical aesthetics clinics, med spas and cosmetic dermatology practices. Built with GSAP scroll animation, Lenis smooth scrolling and React Three Fiber.</p>
+<p>Live preview: https://ondelle-aesthetics.vercel.app</p>
+<hr>
+<h2>1. What you get</h2>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Framework</td><td>Next.js 15 (App Router) + React</td></tr><tr><td>Styling</td><td>Tailwind CSS 4</td></tr><tr><td>Animation</td><td>GSAP + @gsap/react, Lenis smooth scroll</td></tr><tr><td>3D</td><td>React Three Fiber + drei + three</td></tr><tr><td>Language</td><td>TypeScript, strict</td></tr><tr><td>Pages</td><td>One long-form scroll page, 14 numbered sections</td></tr><tr><td>Deployment</td><td>Zero-config on Vercel; any Node host works</td></tr></tbody></table>
+<p>Included sections: hero with ambient video, brand introduction, philosophy, clinical leadership, the space, four treatment card grids (face, body, skin, rituals), a horizontal scroll experience, protocols, results, CTA, contact and closing.</p>
+<h2>2. Requirements</h2>
+<ul><li>Node.js 18.18 or newer</li><li>npm (or pnpm/yarn)</li></ul>
+<h2>3. Installation</h2>
+<pre><code>npm install
+npm run dev      # http://localhost:3000
+npm run build    # production build
+npm start        # serve the production build</code></pre>
+<p>Type-check without building:</p>
+<pre><code>npx tsc --noEmit</code></pre>
+<h2>4. Rebranding — start here</h2>
+<p><strong>Every piece of visible text lives in one file: <code>src/lib/content.ts</code>.</strong></p>
+<p>You do not need to open a component to change the brand. Rewrite that file and the whole site becomes a different clinic. This is the single most important thing to know about this template.</p>
+<h3>4.1 Brand identity</h3>
+<p>Open <code>src/lib/content.ts</code> and edit the <code>brand</code> export at the top:</p>
+<pre><code>export const brand = {
+  name: "ONDELLE",                  // wordmark text
+  full: "Ondelle Aesthetics",       // legal / full name
+  tagline: "Advanced aesthetics. Naturally you.",
+  city: "Miami",
+  url: "https://your-domain.com",
+  email: "hello@your-domain.com",
+  phone: "(305) 555-0142",
+  booking: "tel:+13055550142",
+  instagram: { handle: "@yourhandle", url: "https://instagram.com/..." },
+  address: { street: "...", postal: "...", city: "...", country: "US" },
+  hours: [ { dias: "Monday to Friday", horas: "9:00 AM — 7:00 PM" } ],
+};</code></pre>
+<blockquote><p>The demo ships a phone number in the <code>555-0100–0199</code> range, which is reserved for fictional use in North America. <strong>Replace it with your real number before going live</strong> — and only with a number somebody actually answers.</p></blockquote>
+<h3>4.2 Sections and copy</h3>
+<p>The remaining exports in <code>content.ts</code> map one-to-one onto the page sections, in page order:</p>
+<p><code>hero</code> · <code>intro</code> · <code>filosofia</code> · <code>direcaoClinica</code> · <code>espaco</code> · <code>medicinaEstetica</code> · <code>tecnologia</code> · <code>rosto</code> · <code>corpo</code> · <code>pele</code> · <code>rituais</code> · <code>experiencia</code> · <code>protocolos</code> · <code>resultados</code> · <code>cta</code> · <code>contactos</code> · <code>fecho</code> · <code>frases</code> · <code>footer</code></p>
+<p>Two supporting exports control chrome rather than content:</p>
+<ul><li><code>sectionIds</code> — section order and anchor ids; feeds the fixed progress counter</li><li><code>counterLabels</code> — the label shown next to the counter for each section</li><li><code>nav</code> — header navigation entries</li></ul>
+<p>Adding or removing a section means updating <code>sectionIds</code> and <code>counterLabels</code> together, or the counter will run out of step with the page.</p>
+<h3>4.3 The wordmark</h3>
+<p><code>src/components/ui/wordmark.tsx</code> renders the logo as <strong>live SVG text</strong>, not an image, in four places (header, closing, footer and the preloader). It uses Instrument Serif with a metallic gradient.</p>
+<p>To use your own name, change <code>brand.name</code>. To use your own typeface, change the font in that component — but note the <code>fontSize</code> is derived from the real cap-height of Instrument Serif (<code>0.7344</code>). A different font needs that constant recalculated, or the wordmark will sit off its baseline.</p>
+<h3>4.4 Colours and type</h3>
+<p>Design tokens live in a Tailwind 4 <code>@theme</code> block in <code>src/app/globals.css</code>. The palette is a deep burgundy (<code>--color-bordo: #3b0112</code>) and a warm gold (<code>--color-ouro: #ce9a44</code>), each with a family of tints, shades and glow values around it. A rebrand is a token change, not a search-and-replace.</p>
+<p>Typography is Instrument Serif for display and Inter for body text, both loaded through <code>next/font/google</code> in <code>src/app/layout.tsx</code>.</p>
+<h2>5. Images and video</h2>
+<p>All imagery ships in <code>public/imagens/</code>, grouped by purpose:</p>
+<pre><code>public/imagens/
+  destaque/      feature images (hero figure, gold band, tablet, portraits)
+  equipa/        clinical leadership and team
+  protocolos/    treatment card images
+  flores/        decorative botanical stills
+  flores-video/  decorative botanical video loops
+  video/         ambient hero video + poster frame
+  marca/         brand assets
+  placeholder/   neutral stand-ins at the right aspect ratios</code></pre>
+<h3>Recommended dimensions</h3>
+<p>Each slot has a neutral stand-in in <code>public/imagens/placeholder/</code> at the exact aspect ratio the layout expects. Match these and nothing shifts:</p>
+<table><thead><tr><th>Slot</th><th>Placeholder file</th><th>Aspect</th><th>Ships at</th></tr></thead><tbody><tr><td>Treatment cards, portraits</td><td><code>retrato-4x5.jpg</code></td><td>4:5</td><td>1122 × 1402</td></tr><tr><td>Hero figure</td><td><code>hero-figura.jpg</code></td><td>3:4</td><td>1200 × 1600</td></tr><tr><td>Wide plates</td><td><code>lamina-4x3.jpg</code></td><td>4:3</td><td>1400 × 1050</td></tr><tr><td>Full-width bands</td><td><code>faixa-larga.jpg</code></td><td>~3:1</td><td>2203 × 714</td></tr><tr><td>Ambient video</td><td>—</td><td>16:9 desktop, 9:16 mobile</td><td>1280 × 720 / 720 × 1280</td></tr></tbody></table>
+<p>Supply card and portrait art at <strong>1200 × 1500 or larger</strong>. Anything smaller visibly softens on a retina display at full-bleed sizes.</p>
+<p>Replacing an image is a file swap plus a path change in <code>content.ts</code>. The <code>placeholder/</code> folder holds neutral files at each aspect ratio if you want to strip the demo imagery before adding your own.</p>
+<h3>Media licensing — read before you publish</h3>
+<p>The bundled imagery is <strong>demonstration content</strong>, AI-generated and carrying embedded C2PA provenance identifying it as such.</p>
+<p><strong>Nine treatment-card slots ship with neutral placeholder art</strong> rather than finished photography. They are fully wired up and correctly sized — drop your own imagery in at the dimensions in the table above and nothing shifts. The affected slots are eight treatment cards and the preloader opening image; you will recognise them immediately, as they render as plain neutral plates.</p>
+<p>This is deliberate. You were always going to replace treatment photography with your own clinic's work, and you should not pay for pictures on the way through. <strong>The code, layout, animation and component library are the product.</strong></p>
+<h2>6. SEO and indexing</h2>
+<p>The template is <strong>noindex by default</strong>, deliberately — an unbranded demo of a clinic should not appear in search results looking like a real practice.</p>
+<p>Indexing is controlled by an environment variable, so you never edit code:</p>
+<pre><code>SITE_INDEXAVEL=1</code></pre>
+<p>Set it in your host's environment (Vercel: Project → Settings → Environment Variables) when the site is genuinely ready to be found. Leave it unset and the site stays out of search. Also update before launch:</p>
+<ul><li><code>metadata.title</code> and <code>metadata.description</code></li><li>the Open Graph image at <code>src/app/opengraph-image</code></li><li>the favicon at <code>src/app/icon.png</code></li><li>any structured data describing the business</li></ul>
+<h2>7. Accessibility notes</h2>
+<p>The template ships with a skip-to-content link, a global <code>:focus-visible</code> style, and <code>prefers-reduced-motion: reduce</code> handling in eight places across <code>globals.css</code> and the motion components — the scroll-driven animation degrades to static layout rather than breaking.</p>
+<p>One known limitation, stated plainly rather than buried: the fixed progress counter and the scroll indicator use <code>mix-blend-difference</code> over the hero video. Against a very light video frame this caps the achievable contrast at roughly 3:1 — enough for large text, short of the 4.5:1 that small text requires. If your hero footage is light and you need strict WCAG AA, replace <code>mix-blend-difference</code> in <code>src/components/motion/progress-counter.tsx</code> with a solid colour plus a scrim.</p>
+<h2>8. Deployment</h2>
+<h3>Vercel</h3>
+<pre><code>npx vercel</code></pre>
+<p><strong>If you forked this from another project, delete <code>.vercel/</code> first.</strong> A stale <code>.vercel/project.json</code> points at the previous project and the deploy will overwrite the wrong site.</p>
+<h3>Any Node host</h3>
+<pre><code>npm run build
+npm start        # listens on PORT, default 3000</code></pre>
+<h2>9. Support and updates</h2>
+<p>Support covers installation, configuration and bugs in the template itself. It does not cover custom development, third-party plugins, or hosting.</p>
+<h2>10. Credits</h2>
+<table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Next.js</td><td>MIT — Vercel</td></tr><tr><td>Tailwind CSS</td><td>MIT</td></tr><tr><td>GSAP</td><td>see gsap.com licensing</td></tr><tr><td>Lenis</td><td>MIT — Studio Freight</td></tr><tr><td>three / React Three Fiber / drei</td><td>MIT</td></tr><tr><td>Instrument Serif</td><td>SIL Open Font License</td></tr></tbody></table>
+<p><strong>GSAP licensing is your responsibility to verify for your use case.</strong> This template uses the core library plus three plugins — <code>ScrollTrigger</code>, <code>SplitText</code> and <code>CustomEase</code>. <code>SplitText</code> and <code>CustomEase</code> were historically paid "Club GreenSock" plugins and were later released for free use; confirm the current terms at gsap.com before shipping commercially, since the licence has changed more than once.</p>
+</main>
+</body>
+</html>
